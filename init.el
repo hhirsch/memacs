@@ -1,12 +1,11 @@
 (require 'package)
+(add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
 
 (unless (package-installed-p 'use-package)
 (package-refresh-contents)
 (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -52,11 +51,6 @@
   (add-hook 'js-mode-hook #'lsp)  
   )
 
-(use-package dap-php
-  :ensure t  
-  :config
-)
-
 (use-package doom-themes
   :ensure t
   :config
@@ -92,7 +86,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(dap-php nerd-icons all-the-icons dap-mode php-mode company lsp-mode dashboard)))
+   '(dap-php dap nerd-icons all-the-icons dap-mode php-mode company lsp-mode dashboard)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
