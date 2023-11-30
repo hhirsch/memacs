@@ -10,7 +10,11 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(gcmh-mode 1)
+(use-package gcmh
+  :config
+  (gcmh-mode 1)
+)
+
 (global-linum-mode 1)
 (ido-mode 1)
 (set-face-attribute 'default nil :height 150)
