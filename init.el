@@ -11,6 +11,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (use-package gcmh
+  :ensure t  
   :config
   (gcmh-mode 1)
 )
@@ -52,6 +53,7 @@
   )
 
 (use-package dap-php
+  :ensure t  
   :config
 )
 
@@ -90,7 +92,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(nerd-icons all-the-icons dap-mode php-mode company lsp-mode dashboard)))
+   '(dap-php nerd-icons all-the-icons dap-mode php-mode company lsp-mode dashboard)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
