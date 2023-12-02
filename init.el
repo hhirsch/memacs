@@ -44,6 +44,9 @@
   )
 
 (defun start-garbage-collector()
+  ;; don't show gcmh as minor mode
+  (eval-after-load 'gcmh
+  '(setq minor-mode-alist (assq-delete-all 'gcmh-mode minor-mode-alist)))
   ;; enable garbage collection freeing unused memory
   (use-package gcmh
     :ensure t  
@@ -111,6 +114,15 @@
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
   (doom-themes-org-config))
+
+;; don't show undo-tree as minor mode
+(eval-after-load 'undo-tree
+  '(setq minor-mode-alist (assq-delete-all 'undo-tree-mode minor-mode-alist)))
+;; globaly enable undo tree
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode)
+  )
 
 (add-hook 'after-save-hook 'autocompile-init-file)
 (run-with-idle-timer 0 nil #'async-startup)
