@@ -22,7 +22,18 @@
     (add-hook 'c++-mode-hook #'lsp)
     (add-hook 'js-mode-hook #'lsp)
   )
-)
+  )
+
+(defun setup-editor-for-programming ()
+  "Prepare editor for programming"
+  (global-linum-mode 1)
+  (ido-mode 1)
+  (set-face-attribute 'default nil :height 150)
+  ; indentation
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 2)
+  (setq indent-line-function 'insert-tab)
+ )
 
 (require 'package) ; load package managment
 ; add sources to load our packages from
@@ -43,14 +54,10 @@
   (gcmh-mode 1)
 )
 
-(global-linum-mode 1)
-(ido-mode 1)
-(set-face-attribute 'default nil :height 150)
+(setup-editor-for-programming)
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-(setq indent-line-function 'insert-tab)
-
+; move save files to a central space
+; avoiding cluttering project directories
 (setq backup-directory-alist
       `((".*" . "~/.saves")))
 (setq auto-save-file-name-transforms
