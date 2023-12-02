@@ -12,6 +12,18 @@
     (if (string= (buffer-file-name) (file-chase-links dotemacs))
       (byte-compile-file dotemacs))))
 
+(defun install-language-server-hooks ()
+  "Automatically start lsp for certain programming languages"
+  (use-package lsp-mode
+    :ensure t
+    :config
+    (add-hook 'php-mode-hook #'lsp)
+    (add-hook 'c-mode-hook #'lsp)
+    (add-hook 'c++-mode-hook #'lsp)
+    (add-hook 'js-mode-hook #'lsp)
+  )
+)
+
 (require 'package) ; load package managment
 ; add sources to load our packages from
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
@@ -46,6 +58,7 @@
 (unless (server-running-p)
 (server-start)))
 
+; Dashboard Configuration
 (use-package dashboard
   :ensure t
   :config
@@ -55,15 +68,9 @@
   (setq dashboard-banner-logo-title "MeMacs")
   (setq dashboard-init-info "Keep things light"))
 
-(use-package lsp-mode
-  :ensure t
-  :config
-  (add-hook 'php-mode-hook #'lsp)
-  (add-hook 'c-mode-hook #'lsp)
-  (add-hook 'c++-mode-hook #'lsp)
-  (add-hook 'js-mode-hook #'lsp)  
-  )
+(install-language-server-hooks)
 
+; Setup Theme
 (use-package doom-themes
   :ensure t
   :config
@@ -82,17 +89,3 @@
   (doom-themes-org-config))
 
 (add-hook 'after-save-hook 'autocompile-init-file)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(dap-php dap nerd-icons all-the-icons dap-mode php-mode company lsp-mode dashboard)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
