@@ -43,6 +43,29 @@
   (setq indent-line-function 'insert-tab)
   )
 
+(defun start-garbage-collector()
+  ;; enable garbage collection freeing unused memory
+  (use-package gcmh
+    :ensure t  
+    :config
+    (gcmh-mode 1)
+    )
+  )
+
+(defun start-emacs-server ()
+  "start emacs server"
+  (use-package server
+    :config
+    (unless (server-running-p) ;; only start the server if it isn't already running
+      (server-start)))  
+  )
+
+(defun async-startup ()
+  "Run in the background asynchronously"
+  (start-garbage-collector)  
+  (start-emacs-server)
+ )
+
 (require 'package) ; load package managment
 ;; add sources to load our packages from
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
@@ -55,13 +78,6 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-;; enable garbage collection freeing unused memory
-(use-package gcmh
-  :ensure t  
-  :config
-  (gcmh-mode 1)
-  )
-
 (setup-editor-for-programming)
 
 ;; move save files to a central space
@@ -70,12 +86,6 @@
       `((".*" . "~/.saves")))
 (setq auto-save-file-name-transforms
       `((".*" "~/.saves" t)))
-
-;; start emacs server
-(use-package server
-  :config
-  (unless (server-running-p) ;; only start the server if it isn't already running
-    (server-start)))
 
 ;; Dashboard Configuration
 (use-package dashboard
@@ -103,3 +113,4 @@
   (doom-themes-org-config))
 
 (add-hook 'after-save-hook 'autocompile-init-file)
+(run-with-idle-timer 0 nil #'async-startup)
