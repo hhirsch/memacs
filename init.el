@@ -32,8 +32,11 @@
 
 (ensure-use-package-is-installed)
 
+; remove toolbar and menu bar
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+
+; enable garbage collection freeing unused memory
 (use-package gcmh
   :ensure t  
   :config
@@ -53,6 +56,7 @@
 (setq auto-save-file-name-transforms
       `((".*" "~/.saves" t)))
 
+; start emacs server
 (use-package server
   :config
 (unless (server-running-p)
