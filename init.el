@@ -1,11 +1,24 @@
-(require 'package)
+(defun ensure-use-package-is-installed ()
+  "Installs use package if it is not installed"
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package)))
+
+(defun autocompile-init-file nil
+  "Check if buffer is the init file and compile it"
+  (interactive)
+  (require 'bytecomp)
+  (let ((dotemacs (file-truename user-init-file)))
+    (if (string= (buffer-file-name) (file-chase-links dotemacs))
+      (byte-compile-file dotemacs))))
+
+(require 'package) ; load package managment
+; add sources to load our packages from
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
+(package-initialize) ; load and activate the installed packages
 
-(unless (package-installed-p 'use-package)
-(package-refresh-contents)
-(package-install 'use-package))
+(ensure-use-package-is-installed)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -68,17 +81,7 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-
-
-(defun autocompile nil
-  "compile itself if init file"
-  (interactive)
-  (require 'bytecomp)
-  (let ((dotemacs (file-truename user-init-file)))
-    (if (string= (buffer-file-name) (file-chase-links dotemacs))
-      (byte-compile-file dotemacs))))
-
-(add-hook 'after-save-hook 'autocompile)
+(add-hook 'after-save-hook 'autocompile-init-file)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
