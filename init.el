@@ -92,17 +92,6 @@
 (setq auto-save-file-name-transforms
       `((".*" "~/.saves" t)))
 
-;; Cmake support
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (use-package cmake-mode                                                ;;
-;;   :ensure t                                                            ;;
-;;   :init                                                                ;;
-;;   (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode)) ;;
-;;   (add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode)))        ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
-
 ;; Dashboard Configuration
 (ensure-package-is-installed 'dashboard) 
 (use-package dashboard
