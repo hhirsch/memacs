@@ -6,11 +6,11 @@
 ;;
 ;; Light Emacs Distribution
 
-(defun ensure-use-package-is-installed ()
-  "Installs use package if it is not installed"
-  (unless (package-installed-p 'use-package)
+(defun ensure-package-is-installed (package)
+  "Installs the specified package if it is not installed"
+  (unless (package-installed-p package)
     (package-refresh-contents)
-    (package-install 'use-package)))
+    (package-install package)))
 
 (defun autocompile-init-file nil
   "Check if buffer is the init file and compile it"
@@ -48,6 +48,7 @@
   (eval-after-load 'gcmh
   '(setq minor-mode-alist (assq-delete-all 'gcmh-mode minor-mode-alist)))
   ;; enable garbage collection freeing unused memory
+  (ensure-package-is-installed 'gcmh) 
   (use-package gcmh
     :ensure t  
     :config
@@ -57,6 +58,7 @@
 
 (defun start-emacs-server ()
   "start emacs server"
+  (ensure-package-is-installed 'server) 
   (use-package server
     :config
     (unless (server-running-p) ;; only start the server if it isn't already running
@@ -75,7 +77,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize) ; load and activate the installed packages
 
-(ensure-use-package-is-installed)
+(ensure-package-is-installed 'use-package)
 
 ;; remove toolbar and menu bar
 (tool-bar-mode -1)
@@ -102,6 +104,7 @@
 ;;(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
 
 ;; Dashboard Configuration
+(ensure-package-is-installed 'dashboard) 
 (use-package dashboard
   :ensure t
   :config
@@ -113,12 +116,14 @@
 
 (install-language-server-hooks)
 ;; Go Support
+(ensure-package-is-installed 'go-mode) 
 (use-package go-mode
   :ensure t
   :config
   (add-hook 'go-mode-hook #'lsp-deferred)
   (add-hook 'before-save-hook #'lsp-format-buffer))
 ;; Terraform OpenTofu Support
+(ensure-package-is-installed 'terraform-mode) 
 (use-package terraform-mode
   :ensure t
   :config
@@ -133,14 +138,18 @@
   (setq font-lock-defaults '((builder-font-lock-keywords))))
 
 (defvar builder-font-lock-keywords
-  '(("^\\(builder-mode\\|step\\|listPackages\\|dumpPackages\\|ensurePackage\\|executeAndPrint\\)\\s-+\\(.*\\)$" 
+  '(("^\\(builder-mode\\|step\\|setUser\\|setupHost\\|setHost\\|setTargetUser\\|pushFile\\|executable\\|ensureExecutable\\|ensureService\\|listPackages\\|dumpPackages\\|ensurePackage\\|executeAndPrint\\)\\s-+\\(.*\\)$" 
      (1 font-lock-keyword-face)
-     (2 font-lock-string-face))))
+     (2 font-lock-string-face))
+     ("//.*$" 
+     (0 font-lock-comment-face)
+)))
 (add-hook 'builder-mode-hook 'turn-on-font-lock)
 (add-hook 'builder-mode-hook 'no-electric-indent)
 (add-to-list 'auto-mode-alist '("\\.bld\\'" . builder-mode))
 
 ;; Setup Theme
+(ensure-package-is-installed 'doom-themes) 
 (use-package doom-themes
   :ensure t
   :config
@@ -157,6 +166,7 @@
 (eval-after-load 'undo-tree
   '(setq minor-mode-alist (assq-delete-all 'undo-tree-mode minor-mode-alist)))
 ;; globaly enable undo tree
+(ensure-package-is-installed 'undo-tree) 
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
