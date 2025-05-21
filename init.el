@@ -5,7 +5,7 @@
 ;; |_|  |_|\___|_|  |_|\__,_|\___|___/
 ;;
 ;; Light Emacs Distribution
-
+(global-display-line-numbers-mode t)
 (defun ensure-package-is-installed (package)
   "Installs the specified package if it is not installed"
   (unless (package-installed-p package)
@@ -34,8 +34,8 @@
 
 (defun setup-editor-for-programming ()
   "Prepare editor for programming"
-  (global-linum-mode 1)
   (ido-mode 1)
+  (setq display-line-numbers t)
   (set-face-attribute 'default nil :height 150)
   ;; indentation
   (setq-default indent-tabs-mode nil)
@@ -103,7 +103,9 @@
   (setq dashboard-banner-logo-title "MeMacs")
   (setq dashboard-init-info "Keep things light"))
 
+;; Language Server Hooks
 (install-language-server-hooks)
+
 ;; Go Support
 (ensure-package-is-installed 'go-mode) 
 (use-package go-mode
@@ -111,13 +113,7 @@
   :config
   (add-hook 'go-mode-hook #'lsp-deferred)
   (add-hook 'before-save-hook #'lsp-format-buffer))
-;; Terraform OpenTofu Support
-(ensure-package-is-installed 'terraform-mode) 
-(use-package terraform-mode
-  :ensure t
-  :config
-  (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode)
-  (add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode)))
+
 ;; Builder Mode
 (defun no-electric-indent ()
   (setq-local electric-indent-functions '(lambda (char) 'no-indent)))
@@ -127,12 +123,17 @@
   (setq font-lock-defaults '((builder-font-lock-keywords))))
 
 (defvar builder-font-lock-keywords
-  '(("^\\(builder-mode\\|step\\|setUser\\|setupHost\\|setHost\\|setTargetUser\\|pushFile\\|executable\\|ensureExecutable\\|ensureService\\|listPackages\\|dumpPackages\\|ensurePackage\\|executeAndPrint\\)\\s-+\\(.*\\)$" 
+  '(("^\\(builder-mode\\|remove\\|purge\\|execute\\|listContains\\|listFiles\\|assertTrue\\|assertFalse\\|step\\|done\\|upload\\|function\\|setUser\\|connect\\|setupHost\\|setHost\\|setTargetUser\\|pushFile\\|executable\\|ensureExecutable\\|ensureService\\|listPackages\\|dumpPackages\\|include\\|alias\\|print\\|ensurePackage\\|ensureCapabilityConnection\\|executeAndPrint\\|saveDatabase\\)\\s-+\\(.*\\)$" 
      (1 font-lock-keyword-face)
      (2 font-lock-string-face))
      ("//.*$" 
      (0 font-lock-comment-face)
-)))
+     )))
+
+(font-lock-add-keywords
+ 'builder-mode
+ `((,(concat "^systemInfo\\s-*$") 0 font-lock-keyword-face)))
+
 (add-hook 'builder-mode-hook 'turn-on-font-lock)
 (add-hook 'builder-mode-hook 'no-electric-indent)
 (add-to-list 'auto-mode-alist '("\\.bld\\'" . builder-mode))
@@ -145,21 +146,30 @@
   (setq doom-themes-enable-bold t   
         doom-themes-enable-italic t)
   (load-theme 'doom-one t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
   (setq doom-themes-treemacs-theme "doom-atom")
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
+)
 
 ;; don't show undo-tree as minor mode
 (eval-after-load 'undo-tree
   '(setq minor-mode-alist (assq-delete-all 'undo-tree-mode minor-mode-alist)))
+;; Prevent undo tree files from polluting your git repo
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 ;; globaly enable undo tree
 (ensure-package-is-installed 'undo-tree) 
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
   )
+
+(ensure-package-is-installed 'org-ref) 
+(use-package org-ref)
+
+;; color for source code listings in org mode latex exports
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-listings 'minted) 
 
 (add-hook 'after-save-hook 'autocompile-init-file)
 (run-with-idle-timer 0 nil #'async-startup)
@@ -168,11 +178,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(terraform-mode go-mode cmake-mode use-package-el-get undo-tree php-mode nerd-icons gcmh doom-themes dashboard dap-mode company all-the-icons)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'downcase-region 'disabled nil)
