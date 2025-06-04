@@ -113,6 +113,18 @@
   :config
   (add-hook 'go-mode-hook #'lsp-deferred)
   (add-hook 'before-save-hook #'lsp-format-buffer))
+(ensure-package-is-installed 'company) 
+(use-package company
+  :ensure t
+  :config
+  (add-hook 'completion-at-point-functions 'go-complete-at-point)
+	(setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.0))
+(ensure-package-is-installed 'lsp-ui) 
+(use-package lsp-ui
+  :ensure t
+  :config
+(add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 ;; Builder Mode
 (defun no-electric-indent ()
@@ -178,7 +190,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(company dashboard doom-themes gcmh git-gutter go-complete lsp-mode
+             lsp-ui org-ref terraform-mode undo-tree)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
