@@ -98,7 +98,14 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-set-footer nil)
+  (setq dashboard-startupify-list '(dashboard-insert-banner
+                                  dashboard-insert-newline
+                                  dashboard-insert-banner-title
+                                  dashboard-insert-newline
+                                  dashboard-insert-navigator
+                                  dashboard-insert-newline
+                                  dashboard-insert-init-info
+                                  dashboard-insert-items))
   (setq dashboard-startup-banner "~/.emacs.d/logo.svg")
   (setq dashboard-banner-logo-title "MeMacs")
   (setq dashboard-init-info "Keep things light"))
@@ -181,7 +188,19 @@
       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-(setq org-latex-listings 'minted) 
+(setq org-latex-src-block-backend 'minted) 
+
+
+;; Snippets
+(ensure-package-is-installed 'yasnippet) 
+(use-package yasnippet
+  :ensure t
+  :hook ((text-mode
+          prog-mode
+          conf-mode
+          snippet-mode) . yas-minor-mode-on)
+  :init
+  (setq yas-snippet-dir "~/.emacs.d/snippets"))
 
 (add-hook 'after-save-hook 'autocompile-init-file)
 (run-with-idle-timer 0 nil #'async-startup)
@@ -190,9 +209,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(company dashboard doom-themes gcmh git-gutter go-complete lsp-mode
-             lsp-ui org-ref terraform-mode undo-tree)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
