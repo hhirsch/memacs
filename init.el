@@ -98,6 +98,9 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents   . 15)
+                        (bookmarks . 5)
+                        (projects  . 5)))
   (setq dashboard-startupify-list '(dashboard-insert-banner
                                   dashboard-insert-newline
                                   dashboard-insert-banner-title
@@ -109,16 +112,16 @@
   (setq dashboard-startup-banner "~/.emacs.d/logo.svg")
   (setq dashboard-banner-logo-title "MeMacs")
   (setq dashboard-init-info "Keep things light"))
-
 ;; Language Server Hooks
 (install-language-server-hooks)
 
 ;; Go Support
-(ensure-package-is-installed 'go-mode) 
+(ensure-package-is-installed 'go-mode)
 (use-package go-mode
   :ensure t
   :config
   (add-hook 'go-mode-hook #'lsp-deferred)
+  (add-hook 'go-mode-hook #'yas-reload-all)  
   (add-hook 'before-save-hook #'lsp-format-buffer))
 (ensure-package-is-installed 'company) 
 (use-package company
@@ -142,7 +145,7 @@
   (setq font-lock-defaults '((builder-font-lock-keywords))))
 
 (defvar builder-font-lock-keywords
-  '(("^\\(builder-mode\\|remove\\|purge\\|execute\\|listContains\\|listFiles\\|assertTrue\\|assertFalse\\|step\\|done\\|upload\\|function\\|setUser\\|connect\\|setupHost\\|setHost\\|setTargetUser\\|pushFile\\|executable\\|ensureExecutable\\|ensureService\\|listPackages\\|dumpPackages\\|include\\|alias\\|print\\|ensurePackage\\|ensureCapabilityConnection\\|executeAndPrint\\|saveDatabase\\)\\s-+\\(.*\\)$" 
+  '(("^\\(builder-mode\\|remove\\|purge\\|execute\\|listContains\\|listFiles\\|assertTrue\\|assertFalse\\|step\\|done\\|upload\\|function\\|setUser\\|connect\\|import\\|setupHost\\|setHost\\|setTargetUser\\|pushFile\\|executable\\|ensureExecutable\\|ensureService\\|listPackages\\|dumpPackages\\|include\\|alias\\|print\\|ensurePackage\\|ensureCapabilityConnection\\|executeAndPrint\\|saveDatabase\\)\\s-+\\(.*\\)$" 
      (1 font-lock-keyword-face)
      (2 font-lock-string-face))
      ("//.*$" 
@@ -190,8 +193,12 @@
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 (setq org-latex-src-block-backend 'minted) 
 
+;;iedit
+(ensure-package-is-installed 'iedit)
+(global-set-key (kbd "C-;") 'iedit-mode)
 
 ;; Snippets
+(ensure-package-is-installed 'dirvish)
 (ensure-package-is-installed 'yasnippet) 
 (use-package yasnippet
   :ensure t
@@ -199,7 +206,13 @@
           prog-mode
           conf-mode
           snippet-mode) . yas-minor-mode-on)
-  :init
+    :bind (:map yas-minor-mode-map
+         ("TAB" . nil)
+         ("<tab>" . nil)
+         ("C-c C-l" . yas-insert-snippet)
+         ("C-c C-w" . yas-expand)         
+         )
+    :init
   (setq yas-snippet-dir "~/.emacs.d/snippets"))
 
 (add-hook 'after-save-hook 'autocompile-init-file)
