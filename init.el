@@ -136,6 +136,10 @@
   :config
 (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
+;; Puppet Support
+(ensure-package-is-installed 'puppet-mode)
+(use-package puppet-mode)
+
 ;; Builder Mode
 (defun no-electric-indent ()
   (setq-local electric-indent-functions '(lambda (char) 'no-indent)))
@@ -195,6 +199,7 @@
 
 ;;iedit
 (ensure-package-is-installed 'iedit)
+(use-package iedit-mode)
 (global-set-key (kbd "C-;") 'iedit-mode)
 
 ;; Snippets
