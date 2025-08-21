@@ -13,3 +13,24 @@ Install in a fresh emacs with
 ```
 git clone https://github.com/hhirsch/memacs.git $HOME/.emacs.d
 ```
+
+## Run As Service
+Run emacs as service
+```
+systemctl --user enable --now emacs
+```
+
+Check if the service is running
+```
+systemctl --user status emacs.service
+```
+
+To start emacs type
+```
+emacsclient
+```
+
+For extra performance I suggest starting emacsclient in the terminal it will look and feel the same:
+```
+emacsclient -nw
+```
