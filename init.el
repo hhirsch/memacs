@@ -7,6 +7,15 @@
 ;; Light Emacs Distribution
 (load "~/.emacs.d/memacs.el")
 (global-display-line-numbers-mode t)
+(defun nolinum ()
+  (display-line-numbers-mode 0)
+)
+
+(defun on-after-init ()
+  (unless (display-graphic-p (selected-frame))
+    (set-face-background 'default "unspecified-bg" (selected-frame))))
+
+(add-hook 'window-setup-hook 'on-after-init)
 (setq lsp-disabled-clients '(ts-ls)) ;; deno instead of node
 (defvar memacs/package-refreshed-p nil
   "Non-nil if package archives have been refreshed this Emacs session.")
@@ -49,6 +58,11 @@
   (load-theme 'doom-one t)
   (setq doom-themes-treemacs-theme "doom-atom")
 )
+
+;; Terminal
+(ensure-package-is-installed 'eat)
+(use-package eat)
+(add-hook 'eat-mode-hook 'nolinum)
 
 ;; don't show undo-tree as minor mode
 (eval-after-load 'undo-tree
@@ -101,6 +115,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
+     default))
  '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
