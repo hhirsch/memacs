@@ -9,6 +9,7 @@ Minimalistic programming focused emacs distribution with quick start up time.
 - Emacs Server
 - Auto complete with company
 - Jump to definition with xref M-.
+- C-c C-c to execute code blocks in markdown mode
 ## Install
 Install in a fresh emacs with
 ```
