@@ -8,6 +8,50 @@
     (package-install package))
   )
 
+(defun markdown-php-fenced-block-region ()
+  "Return (BEG . END) of the current fenced PHP block (excluding fence lines), or nil."
+  (save-excursion
+    (let ((orig (point)))
+      (when (or (search-backward "```php" nil t)
+                (progn (goto-char orig) (search-forward "```php" nil t)))
+        (goto-char (match-beginning 0))
+        (forward-line 1)
+        (let ((beg (point)))
+          (if (search-forward-regexp "^```[ \t]*$" nil t)
+              (progn (beginning-of-line) (cons beg (point)))
+            (cons beg (point-max))))))))
+
+
+(defun markdown-run-php-fenced-block-via-shell-command ()
+  "Send current PHP fenced block to `php' via `shell-command-on-region'.
+If the block does not start with a PHP opening tag, prepend \"<?php\\n\" before sending."
+  (interactive)
+  (let ((range (markdown-php-fenced-block-region)))
+    (let* ((beg (car range))
+           (end (cdr range))
+           (code (buffer-substring-no-properties beg end))
+           (needs-tag (not (string-match-p "\\`\\s-*<\\?php\\b" code)))
+           (tmp (make-temp-file "md-php-" nil ".php")))
+      ;; Write code to temp file, prepending <?php if needed
+      (with-temp-file tmp
+        (when needs-tag
+          (insert "<?php\n"))
+        (insert code))
+      ;; Run php on the temp file and show output
+      (shell-command (format "php %s" (shell-quote-argument tmp)) "*php-shell-output*" "*php-shell-error*")
+      (shell-command (format "rm %s" (shell-quote-argument tmp)))
+      (display-buffer
+       (get-buffer "*php-shell-output*")
+       '((display-buffer-reuse-window display-buffer-in-side-window)
+         (inhibit-same-window . t)
+         (side . bottom)
+         (window-height . 0.25)
+         (no-select . t)))
+      )))
+
+(with-eval-after-load 'markdown-mode
+  (define-key markdown-mode-map (kbd "C-c C-c") #'markdown-run-php-fenced-block-via-shell-command))
+
 (defun autocompile-init-file nil
   "Check if buffer is the init file and compile it"
   (interactive)
