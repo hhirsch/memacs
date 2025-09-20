@@ -7,7 +7,8 @@ Minimalistic programming focused emacs distribution with quick start up time.
 - Language Server integration
 - Dashboard with recent files and bookmarks
 - Emacs Server
-
+- Auto complete with company
+- Jump to definition with xref M-.
 ## Install
 Install in a fresh emacs with
 ```
