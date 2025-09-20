@@ -3,13 +3,13 @@ Minimalistic programming focused emacs distribution with quick start up time.
 
 - Fast startup time
 - Support for PHP, C, C++, JS, Typescript, Go
-- Line numbers 
+- Line numbers
 - Language Server integration
 - Dashboard with recent files and bookmarks
 - Emacs Server
 - Auto complete with company
 - Jump to definition with xref M-.
-- C-c C-c to execute code blocks in markdown mode
+- C-c C-c to execute php code blocks in markdown mode
 ## Install
 Install in a fresh emacs with
 ```
