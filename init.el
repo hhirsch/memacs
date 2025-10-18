@@ -5,17 +5,26 @@
 ;; |_|  |_|\___|_|  |_|\__,_|\___|___/
 ;;
 ;; Light Emacs Distribution
+
+;; add nix binaries to load path
+(let ((nix-bin (expand-file-name "~/.nix-profile/bin")))
+  (when (file-directory-p nix-bin)
+    (setenv "PATH" (concat nix-bin ":" (getenv "PATH")))
+    (add-to-list 'exec-path nix-bin)))
+
 (load "~/.emacs.d/memacs.el")
+
 (global-display-line-numbers-mode t)
 (defun nolinum ()
   (display-line-numbers-mode 0)
-)
+  )
 
-(defun on-after-init ()
-  (unless (display-graphic-p (selected-frame))
-    (set-face-background 'default "unspecified-bg" (selected-frame))))
+;; hint key bindings
+(which-key-mode)
 
-(add-hook 'window-setup-hook 'on-after-init)
+;; transparent background
+(add-to-list 'default-frame-alist '(background-color . "unspecified"))
+
 (setq lsp-disabled-clients '(ts-ls)) ;; deno instead of node
 (defvar memacs/package-refreshed-p nil
   "Non-nil if package archives have been refreshed this Emacs session.")
@@ -55,7 +64,7 @@
   :config
   (setq doom-themes-enable-bold t   
         doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
+  (load-theme 'doom-nord t)
   (setq doom-themes-treemacs-theme "doom-atom")
 )
 
@@ -89,6 +98,10 @@
 ;;iedit
 (ensure-package-is-installed 'iedit)
 (global-set-key (kbd "C-;") 'iedit-mode)
+
+;; quickrun
+(ensure-package-is-installed 'quickrun) 
+(use-package quickrun)
 
 ;; Snippets
 (ensure-package-is-installed 'dirvish)
