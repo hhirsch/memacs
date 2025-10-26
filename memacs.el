@@ -23,15 +23,15 @@
 
 (defun run-command (command)
   (interactive)
-  (shell-command command "*shell-output*" "*shell-error*")
-      (display-buffer
-       (get-buffer "*shell-output*")
-       '((display-buffer-reuse-window display-buffer-in-side-window)
-         (inhibit-same-window . t)
-         (side . bottom)
-         (window-height . 0.25)
-         (no-select . t)))
-      )
+  (async-shell-command command "*shell-output*" "*shell-error*")
+  (display-buffer
+   (get-buffer "*shell-output*")
+   '((display-buffer-reuse-window display-buffer-in-side-window)
+     (inhibit-same-window . t)
+     (side . bottom)
+     (window-height . 0.25)
+     (no-select . t)))
+  )
 
 (defun run-command-at-point ()
   (interactive)

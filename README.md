@@ -10,6 +10,7 @@ Minimalistic programming focused emacs distribution with quick start up time.
 - Auto complete with company
 - Jump to definition with xref M-.
 - C-c C-c to execute php code blocks in markdown mode
+- Add a comment `#x <command>` in any source file and run it with point on the line and C-c C-c
 ## Install
 Install in a fresh emacs with
 ```
