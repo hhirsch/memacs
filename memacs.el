@@ -21,6 +21,27 @@
               (progn (beginning-of-line) (cons beg (point)))
             (cons beg (point-max))))))))
 
+(defun run-command (command)
+  (interactive)
+  (shell-command command "*shell-output*" "*shell-error*")
+      (display-buffer
+       (get-buffer "*shell-output*")
+       '((display-buffer-reuse-window display-buffer-in-side-window)
+         (inhibit-same-window . t)
+         (side . bottom)
+         (window-height . 0.25)
+         (no-select . t)))
+      )
+
+(defun run-command-at-point ()
+  (interactive)
+  (let ((line (buffer-substring (line-beginning-position) (line-end-position))))
+    (if (string-prefix-p "#x " line)
+        (run-command (replace-regexp-in-string "\\`#x " "" line))
+      (message "Line not executable"))))
+
+(with-eval-after-load 'prog-mode
+  (define-key prog-mode-map (kbd "C-c C-c") #'run-command-at-point))
 
 (defun markdown-run-php-fenced-block-via-shell-command ()
   "Send current PHP fenced block to `php' via `shell-command-on-region'.
