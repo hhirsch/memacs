@@ -113,10 +113,14 @@ If the block does not start with a PHP opening tag, prepend \"<?php\\n\" before 
  )
 
 (defun customize-dashboard ()
-(ensure-package-is-installed 'dashboard) 
+ 
+  (ensure-package-is-installed 'dashboard) 
 (use-package dashboard
   :ensure t
   :config
+    (setq dashboard-startup-banner "~/.emacs.d/logo.txt")
+(when (display-graphic-p)
+ (setq dashboard-startup-banner "~/.emacs.d/logo.svg"))
   (dashboard-setup-startup-hook)
   (setq dashboard-items '((recents   . 15)
                         (bookmarks . 5)
@@ -130,7 +134,6 @@ If the block does not start with a PHP opening tag, prepend \"<?php\\n\" before 
     dashboard-insert-newline
     dashboard-insert-init-info
     dashboard-insert-items))
-  (setq dashboard-startup-banner "~/.emacs.d/logo.svg")
   (setq dashboard-banner-logo-title "MeMacs")
   (setq dashboard-init-info "Keep things light"))
 )

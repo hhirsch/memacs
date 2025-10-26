@@ -1,10 +1,27 @@
 (defun add-language-support ()
   "Enable syntax highlighting and lsp for additional languages"
 
+  ;; documentation
+  (ensure-package-is-installed 'devdocs)
+  (use-package devdocs
+    :ensure t
+    :config
+    (global-set-key (kbd "C-h D") 'devdocs-lookup)
+    (add-hook 'php-mode-hook
+	            (lambda () (setq-local devdocs-current-docs '("php"))))
+    (add-hook 'go-mode-hook
+	            (lambda () (setq-local devdocs-current-docs '("go"))))
+    (add-hook 'lua-mode-hook
+	            (lambda () (setq-local devdocs-current-docs '("lua~5.4"))))        
+    )
+
+  
   ;; eglot everything
   (use-package eglot
     :hook (prog-mode . eglot-ensure))
-  
+  (with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(puppet-mode . ("puppet-languageserver" "--stdio"))))
   ;; toml
   (ensure-package-is-installed 'toml-mode)
   (use-package toml-mode)
@@ -35,8 +52,10 @@
     (add-hook 'go-mode-hook #'yas-reload-all)
     (add-hook 'before-save-hook #'lsp-format-buffer))
   (ensure-package-is-installed 'company)
+  
   (use-package company
     :ensure t
+    :hook (prog-mode . company-mode)    
     :config
     (add-hook 'completion-at-point-functions 'go-complete-at-point)
 	  (setq company-minimum-prefix-length 1)
@@ -63,7 +82,8 @@
   ;; Puppet Support
   (ensure-package-is-installed 'puppet-mode)
   (use-package puppet-mode)
-
+  ;; (add-hook 'puppet-mode-hook #'eglot-ensure)
+  
   ;; Builder Mode
   (defun no-electric-indent ()
     (setq-local electric-indent-functions '(lambda (char) 'no-indent)))
