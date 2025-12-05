@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This project has moved to Codeberg: https://codeberg.org/SneakyOctopus/minmacs
+
 # Memacs
 Minimalistic programming focused emacs distribution with quick start up time.
 
